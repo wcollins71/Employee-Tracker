@@ -3,8 +3,43 @@ var inquirer = require("inquirer");
 var connection = require("./config/connection");
 require("console.table");
 
+var PORT = process.env.PORT || 8080;
+
+var app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
+connection.connect(function (err) {
+    if (err) throw err;
+    // Start the application
+    console.log(" _______  __   __  _______  ___      _______  __   __  _______  _______ ")
+    console.log("|       ||  |_|  ||       ||   |    |       ||  | |  ||       ||       |")
+    console.log("|    ___||       ||    _  ||   |    |   _   ||  |_|  ||    ___||    ___|")
+    console.log("|   |___ |       ||   |_| ||   |    |  | |  ||       ||   |___ |   |___ ")
+    console.log("|    ___||       ||    ___||   |___ |  |_|  ||_     _||    ___||    ___|")
+    console.log("|   |___ | ||_|| ||   |    |       ||       |  |   |  |   |___ |   |___ ")
+    console.log("|_______||_|   |_||___|    |_______||_______|  |___|  |_______||_______|")
+    console.log("_______  ______    _______  _______  ___   _  _______  ______          ")
+    console.log("|       ||    _ |  |   _   ||       ||   | | ||       ||    _ |         ")
+    console.log("|_     _||   | ||  |  |_|  ||       ||   |_| ||    ___||   | ||         ")
+    console.log("  |   |  |   |_||_ |       ||       ||      _||   |___ |   |_||_        ")
+    console.log("  |   |  |    __  ||       ||      _||     |_ |    ___||    __  |       ")
+    console.log("  |   |  |   |  | ||   _   ||     |_ |    _  ||   |___ |   |  | |       ")
+    console.log("  |___|  |___|  |_||__| |__||_______||___| |_||_______||___|  |_|       \n\n")
+    // Send to prestart function to start preloading arrays
+    prestart();
+});
+
+function prestart() {
+    // Roll through the functions to populate all of the arrrays relating to the SELECT queries
+    // Also starts back here after each job processed to ensure arrays are updated with the table data
+    listRoles();
+}
+
 let roles = [];
-function listRoles() {
+function listRoles() { // Populate array of roles
     connection.query("SELECT * FROM role", function (err, results) {
         if (err) throw err;
         roles = [];
@@ -13,13 +48,13 @@ function listRoles() {
             var eachResult = results[i].id + ": " + results[i].title;
             roles.push(eachResult);
         }
+        // Next run function for employees
         listEmployees();
     });
-
 }
 
 let employees = [];
-function listEmployees() {
+function listEmployees() { // Populate array of employees
     connection.query("SELECT * FROM employee", function (err, results) {
         if (err) throw err;
         employees = [];
@@ -28,12 +63,13 @@ function listEmployees() {
             var eachResult = results[i].id + ": " + results[i].first_name + " " + results[i].last_name;
             employees.push(eachResult);
         }
+        // Next run function for managers
         listManagers();
     });
 }
 
 let managers = [];
-function listManagers() {
+function listManagers() { // Populate array of managers
     connection.query("SELECT DISTINCT `manager`.`manager_id`, `employee`.`first_name`, `employee`.`last_name` \
     FROM `employee` `manager`\
     INNER JOIN `employee` ON (`manager`.`manager_id` = `employee`.`id`) \
@@ -45,12 +81,13 @@ function listManagers() {
             var eachResult = resultsManager[i].manager_id + ": " + resultsManager[i].first_name + " " + resultsManager[i].last_name;
             managers.push(eachResult);
         }
+        // Next run function for departments
         listDepartments();
     });
 }
 
 let departments = [];
-function listDepartments() {
+function listDepartments() { // Populate array of departments
     connection.query("SELECT * FROM department", function (err, results) {
         if (err) throw err;
         departments = [];
@@ -59,27 +96,9 @@ function listDepartments() {
             var eachResult = results[i].id + ": " + results[i].name;
             departments.push(eachResult);
         }
+        // Proceed to start the inquirer
         start();
     });
-}
-
-
-var PORT = process.env.PORT || 8080;
-
-var app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-
-connection.connect(function (err) {
-    if (err) throw err;
-    // run the start function after the connection is made to prompt the user
-    prestart();
-});
-
-function prestart() {
-    listRoles();
 }
 
 function start() {
@@ -174,6 +193,7 @@ function removeDepartment() {
                     if (err) throw err;
                     console.log("Department deleted\n");
                 });
+            console.table(departments);
             prestart();
         });
 }
@@ -194,6 +214,7 @@ function addDepartment() {
                     if (err) throw err;
                     console.log("Department added");
                 });
+            console.table(departments);
             prestart();
         });
 
@@ -224,6 +245,7 @@ function removeRole() {
                     if (err) throw err;
                     console.log("Role deleted\n");
                 });
+            console.table(roles);
             prestart();
         });
 }
@@ -256,6 +278,7 @@ function addRole() {
                     if (err) throw err;
                     console.log("Role added");
                 });
+                console.table(roles);
             prestart();
         });
 }
@@ -295,7 +318,7 @@ function updateEmployeeManager() {
                 ],
                 function (err, res) {
                     if (err) throw err;
-                    console.log(res.affectedRows + " Manager updated\n");
+                    console.log("Manager updated\n");
                 });
             prestart();
         });
@@ -331,12 +354,11 @@ function updateEmployeeRole() {
                 ],
                 function (err, res) {
                     if (err) throw err;
-                    console.log(res.affectedRows + " Employee updated\n");
+                    console.log("Employee updated\n\n");
                 });
             prestart();
         });
 }
-
 
 function removeEmployee() {
     inquirer
@@ -357,12 +379,11 @@ function removeEmployee() {
                 },
                 function (err, res) {
                     if (err) throw err;
-                    console.log(res.affectedRows + " Employee deleted\n");
+                    console.log("Employee deleted\n\n");
                 });
             prestart();
         });
 }
-
 
 function addEmployee() {
 
@@ -398,12 +419,11 @@ function addEmployee() {
                 [answer.employeeFirstName, answer.employeeLastName, roleId, managerId],
                 function (err, res) {
                     if (err) throw err;
-                    console.log("Employee added");
+                    console.log("Employee added\n\n");
                 });
 
             prestart();
         });
-
 }
 
 function selectDeptView() {
@@ -449,8 +469,7 @@ function viewResults(queryParam, queryRequest) {
     `department`.`name` AS Department, \
     `role`.`salary` AS Salary, \
     (CASE WHEN `employee`.`manager_id` IS NOT NULL THEN CONCAT(`manager`.`first_name`, ' ', `manager`.`last_name`) ELSE '' END) AS `Manager` \
-  FROM \
-    `department` \
+    FROM`department` \
     INNER JOIN `role` ON (`department`.`id` = `role`.`department_id`) \
     INNER JOIN `employee` ON (`role`.`id` = `employee`.`role_id`) \
     LEFT OUTER JOIN `employee` `manager` ON (`manager`.`id` = `employee`.`manager_id`)\
@@ -458,14 +477,14 @@ function viewResults(queryParam, queryRequest) {
     if (queryParam === "department") {
         viewEmployeesQuery += " WHERE `department`.`id` = '" + queryRequest + "' \
         ORDER BY `employee`.`id`"
-        console.log(`All ${queryRequest} employees...\n`);
+        console.log(`All department employees...\n\n`);
     } else if (queryParam === "manager") {
         viewEmployeesQuery += " WHERE `employee`.`manager_id` = '" + queryRequest + "' \
         ORDER BY `employee`.`id`"
-        console.log(`All manager's employees...\n`);
+        console.log(`All manager's employees...\n\n`);
     } else {
         viewEmployeesQuery += " ORDER BY `employee`.`id`"
-        console.log(`All employees...\n`);
+        console.log(`All employees...\n\n`);
     }
     connection.query(viewEmployeesQuery, function (err, res) {
         if (err) throw err;
