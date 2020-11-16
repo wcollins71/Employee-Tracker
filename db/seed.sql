@@ -13,7 +13,7 @@ VALUES
 	('Sales Manager', 120000, 1),
 	('Salesperson', 85000, 1),
 	('Chief Engineer', 135000, 2),
-	('Engineer', 110000, 1),
+	('Engineer', 110000, 2),
 	('Cadet Engineer', 44200, 2),
 	('CEO', 185000, 3),
 	('Financial Controller', 115000, 3),
@@ -22,11 +22,11 @@ VALUES
 INSERT INTO employee
 	(first_name, last_name, role_id, manager_id)
 VALUES
-	('Bob', 'Jones', 1),
-	('Sam', 'Smith', 1, 1),
-	('Jill', 'Pulman', 2),
-	('Alex', 'Peters', 2, 3),
-	('Jane', 'Winks', 3),
-	('David', 'Lock', 3, 5),
-	('Andrew', 'Woodward', 4),
-	('James', 'Earl', 4, 7);
+	('Bob', 'Jones', 1, NULL),
+	('Sam', 'Smith', 2, 1),
+	('Jill', 'Pulman', 3, NULL),
+	('Alex', 'Peters', 4, 3),
+	('Jane', 'Winks', 5, 3),
+	('David', 'Lock', 6, NULL),
+	('Andrew', 'Woodward', 7, 6),
+	('James', 'Earl', 8, NULL);

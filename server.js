@@ -21,7 +21,7 @@ connection.connect(function (err) {
     console.log("|    ___||       ||    ___||   |___ |  |_|  ||_     _||    ___||    ___|")
     console.log("|   |___ | ||_|| ||   |    |       ||       |  |   |  |   |___ |   |___ ")
     console.log("|_______||_|   |_||___|    |_______||_______|  |___|  |_______||_______|")
-    console.log("_______  ______    _______  _______  ___   _  _______  ______          ")
+    console.log(" _______  ______    _______  _______  ___   _  _______  ______          ")
     console.log("|       ||    _ |  |   _   ||       ||   | | ||       ||    _ |         ")
     console.log("|_     _||   | ||  |  |_|  ||       ||   |_| ||    ___||   | ||         ")
     console.log("  |   |  |   |_||_ |       ||       ||      _||   |___ |   |_||_        ")
@@ -122,6 +122,7 @@ function start() {
                     "View All Departments",
                     "Add Department",
                     "Remove Department",
+                    "Utilized Budget of a Department",
                     "Quit"
                 ]
         })
@@ -166,11 +167,31 @@ function start() {
                 case "Remove Department":
                     removeDepartment();
                     break;
+                case "Utilized Budget of a Department":
+                    departmentBudget();
+                    break;
 
                 default:
                     quit();
             }
         });
+}
+
+function departmentBudget() {
+    connection.query("SELECT \
+	department.name AS Department, \
+	CONCAT('$', FORMAT(SUM(salary), 0)) AS Budget \
+FROM (\
+	SELECT role_id, COUNT(*) \
+	FROM employee \
+    GROUP BY role_id \
+    ) AS roleCount JOIN role ON role.id = roleCount.role_id \
+INNER JOIN department ON (role.department_id = department.id) \
+GROUP BY department_id;", function (err, results) {
+        if (err) throw err;
+        console.table(results);
+        prestart();
+    });
 }
 
 function removeDepartment() {
@@ -278,7 +299,7 @@ function addRole() {
                     if (err) throw err;
                     console.log("Role added");
                 });
-                console.table(roles);
+            console.table(roles);
             prestart();
         });
 }
@@ -467,13 +488,12 @@ function viewResults(queryParam, queryRequest) {
     `employee`.`last_name` AS 'Last Name', \
     `role`.`title` AS 'Position Title', \
     `department`.`name` AS Department, \
-    `role`.`salary` AS Salary, \
+    CONCAT('$', FORMAT(`role`.`salary`, 0)) AS Salary, \
     (CASE WHEN `employee`.`manager_id` IS NOT NULL THEN CONCAT(`manager`.`first_name`, ' ', `manager`.`last_name`) ELSE '' END) AS `Manager` \
     FROM`department` \
     INNER JOIN `role` ON (`department`.`id` = `role`.`department_id`) \
     INNER JOIN `employee` ON (`role`.`id` = `employee`.`role_id`) \
-    LEFT OUTER JOIN `employee` `manager` ON (`manager`.`id` = `employee`.`manager_id`)\
-    "
+    LEFT OUTER JOIN `employee` `manager` ON (`manager`.`id` = `employee`.`manager_id`)"
     if (queryParam === "department") {
         viewEmployeesQuery += " WHERE `department`.`id` = '" + queryRequest + "' \
         ORDER BY `employee`.`id`"
