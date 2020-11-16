@@ -45,10 +45,10 @@ You are required to submit the following:
 
 * The URL of the GitHub repository
 
-![GitHub](https://github.com/wcollins71/Employee-Tracker)
+https://github.com/wcollins71/Employee-Tracker
 
 * A video demonstrating the entirety of the app's functionality 
 
-![Run through](https://youtu.be/xtn8SpQ1_wU)
+https://youtu.be/xtn8SpQ1_wU
 - - -
 © 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
