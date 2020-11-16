@@ -45,7 +45,7 @@ You are required to submit the following:
 
 * The URL of the GitHub repository
 
-![GitHub](https://github.com/wcollins71/Employee-Tracker
+![GitHub](https://github.com/wcollins71/Employee-Tracker)
 
 * A video demonstrating the entirety of the app's functionality 
 
