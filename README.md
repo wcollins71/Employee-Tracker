@@ -49,6 +49,6 @@ You are required to submit the following:
 
 * A video demonstrating the entirety of the app's functionality 
 
-![Run through](https://drive.google.com/file/d/1Ryp7byFnf_p5In-2o_jxuGYG9V8zJdJr/view)
+![Run through](https://drive.google.com/file/d/1Ryp7byFnf_p5In-2o_jxuGYG9V8zJdJr/view?usp=sharing)
 - - -
 © 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
