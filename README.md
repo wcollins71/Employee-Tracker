@@ -47,6 +47,6 @@ You are required to submit the following:
 https://github.com/wcollins71/Employee-Tracker
 
 * A video demonstrating the entirety of the app's functionality 
-![Run through](./assests/Run-through.mp4)
+![Run through](/assets/Run-through.mp4)
 - - -
 © 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
