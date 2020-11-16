@@ -44,9 +44,11 @@ So that I can organize and plan my business
 You are required to submit the following:
 
 * The URL of the GitHub repository
+
 ![GitHub](https://github.com/wcollins71/Employee-Tracker
 
 * A video demonstrating the entirety of the app's functionality 
+
 ![Run through](https://drive.google.com/file/d/1Ryp7byFnf_p5In-2o_jxuGYG9V8zJdJr/view)
 - - -
 © 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
